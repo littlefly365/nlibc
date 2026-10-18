@@ -648,27 +648,6 @@ _readlink(const char *path, char *buf, size_t len)
 	return syscall(SYS_readlink, path, buf, len);
 }
 
-__weak_alias(__posix_chown, chown);
-int
-chown(const char *path, uid_t owner, gid_t group)
-{
-	return syscall(SYS_chown, path, owner, group);
-}
-
-__weak_alias(__posix_fchown, fchown);
-int
-fchown(int fd, uid_t owner, gid_t group)
-{
-	return syscall(SYS_chown, fd, owner, group);
-}
-
-__weak_alias(__posix_lchown, lchown);
-int
-lchown(const char *path, uid_t owner, gid_t group)
-{
-	return syscall(SYS_lchown, path, owner, group);
-}
-
 mode_t
 umask(mode_t umask)
 {
@@ -896,12 +875,6 @@ __clock_getres50(clockid_t clk, struct timespec *ts)
  * syscalls: 230-259
  * (not implemented)
 */
-
-int
-fchownat(int fd, const char *path, uid_t owner, gid_t group, int flags)
-{
-	return syscall(SYS_fchownat, fd, path, owner, group, flags);
-}
 
 /*
  * syscalls: 261-262
