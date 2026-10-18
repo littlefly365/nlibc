@@ -9,6 +9,7 @@ PIE_LDFLAGS=
 
 PROG=		ld.elf_so
 
+PREFIX?=	/usr
 BINDIR=		${PREFIX}/libexec
 LDFLAGS+=	-Wl,-Bsymbolic -shared -nostartfiles -nodefaultlibs
 LDFLAGS+=	-Wl,-static

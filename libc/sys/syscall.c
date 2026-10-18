@@ -47,7 +47,7 @@ __weak_alias(__syscall, syscall);
 long
 syscall(long n, ...)
 {
-	int r;
+	long r;
 	va_list ap;
 
 	va_start(ap, n);
@@ -76,7 +76,7 @@ syscall(long n, ...)
 #error "nlibc is only for x86_64"
 #endif
 
-	if (r <= -1 || r >= 4095) {
+	if (r <= -1 && r >= -4095) {
 		errno = -r;
 		return -1;
 	}

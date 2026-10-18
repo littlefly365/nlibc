@@ -36,6 +36,7 @@ __RCSID("$nlibc: fexecve.c,v 1.0 2026/10/11 11:49:05 littlefly365 Exp $");
 
 #include <sys/syscall.h>
 #include <unistd.h>
+#include <fcntl.h> 
 
 int
 fexecve(int fd, char *const argv[], char *const envp[])

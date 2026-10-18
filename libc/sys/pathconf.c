@@ -90,19 +90,19 @@ __pathconf(int name)
  * TODO: Use path/fd when is possible
 */
 
-int
+long
 pathconf(const char *path __unused, int name)
 {
 	return __pathconf(name);
 }
 
-int
+long
 fpathconf(int fd __unused, int name)
 {
 	return __pathconf(name);
 }
 
-int
+long
 lpathconf(const char *path __unused, int name)
 {
 	return __pathconf(name);

@@ -935,13 +935,13 @@ renameat(int oldfd, const char *oldpath, int newfd, const char *newpath)
 int
 linkat(int oldfd, const char *oldpath, int newfd, const char *newpath, int flags)
 {
-	return syscall(SYS_linkat, olfd, oldpath, newfd, newpath, flags);
+	return syscall(SYS_linkat, oldfd, oldpath, newfd, newpath, flags);
 }
 
 int
 symlinkat(const char *oldpath, int newfd, const char *newpath)
 {
-	return syscall(SYS_symlinkat, olfpath, newfd, newpath);
+	return syscall(SYS_symlinkat, oldpath, newfd, newpath);
 }
 
 ssize_t
@@ -958,12 +958,12 @@ readlinkat(int fd, const char *restrict path, char *buf, size_t len)
 int
 faccessat(int fd, const char *path, int amode, int flag)
 {
-	return syscall(SYS_facccessat, fd, path, amode, flag);
+	return syscall(SYS_faccessat, fd, path, amode, flag);
 }
 
 int
 __pselect50(int n, fd_set *restrict rfds, fd_set *restrict wfds, fd_set *restrict efds, const struct timespec *restrict ts,
-	const sigset *restrict mask)
+	const sigset_t *restrict mask)
 {
         long data[2] = { (uintptr_t)mask, 8 };
         return syscall(SYS_pselect6, n, rfds, wfds, efds, (ts) ? ((long[]){ts->tv_sec, ts->tv_nsec}) : 0, data);

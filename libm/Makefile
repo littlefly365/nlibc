@@ -404,7 +404,7 @@ COMMON_SRCS+= b_exp.c b_log.c \
 .PATH:	${.CURDIR}/compat
 COMMON_SRCS+= compat_cabs.c compat_cabsf.c
 # XXX our compatibility cabs() is different!
-COPTS+=	-fno-builtin-cabs :}
+COPTS+=	-fno-builtin-cabs
 COPTS+=	-fno-builtin-cabsf
 
 # math routines for non-IEEE architectures.
