@@ -1,4 +1,4 @@
-/*    $nlibc: getauxval.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: getauxval.c,v 1.1 2026/10/18 16:43:05 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,26 +31,23 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: getauxval.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: getauxval.c,v 1.1 2026/10/18 16:43:05 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/exec_elf.h>
 #include <sys/auxv.h>
-#include <stdint.h>
 #include <dlfcn.h>
 #include <errno.h>
 
 unsigned long
 getauxval(unsigned long type)
 {
-	AuxInfo *auxv;
-	unsigned long r;
+	AuxInfo *auxv = _dlauxinfo();
 
-	for (auxv = _dlauxinfo(); auxv->a_type != AT_NULL; auxv++) {
-		if (auxv->a_type == type) {
-			r = (unsigned long)(uintptr_t)auxv->a_type;
-			return r;
-		}
+	while (auxv->a_type != AT_NULL) {
+		if (auxv->a_type == type)
+			return auxv->a_val;
+		auxv++;
 	}
 
 	errno = ENOENT;
