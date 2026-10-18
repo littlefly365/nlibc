@@ -1,4 +1,4 @@
-/*    $nlibc: syscalls.c,v 1.1 2026/10/12 11:49:05 littlefly365 Exp $    */
+/*    $nlibc: syscalls.c,v 1.2 2026/10/18 16:43:05 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: syscalls.c,v 1.1 2026/10/12 11:49:05 littlefly365 Exp $");
+__RCSID("$nlibc: syscalls.c,v 1.2 2026/10/18 16:43:05 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <machine/vmparam.h>
@@ -646,18 +646,6 @@ ssize_t
 _readlink(const char *path, char *buf, size_t len)
 {
 	return syscall(SYS_readlink, path, buf, len);
-}
-
-int
-chmod(const char *path, mode_t mode)
-{
-	return syscall(SYS_chmod, path, mode);
-}
-
-int
-fchmod(int fd, mode_t mode)
-{
-	return syscall(SYS_fchmod, fd, mode);
 }
 
 __weak_alias(__posix_chown, chown);
