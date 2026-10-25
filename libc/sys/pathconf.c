@@ -1,4 +1,4 @@
-/*    $nlibc: pathconf.c,v 1.1 2026/10/12 11:49:05 littlefly365 Exp $    */
+/*    $nlibc: pathconf.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,79 +31,8 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: pathconf.c,v 1.1 2026/10/12 11:49:05 littlefly365 Exp $");
+__RCSID("$nlibc: pathconf.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
-#include <sys/syslimits.h>
-#include <sys/statvfs.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-
-static int
-__pathconf(int name)
-{
-	switch (name) {
-	case _PC_LINK_MAX:
-		return LINK_MAX;
-	case _PC_MAX_CANON:
-		return MAX_CANON;
-	case _PC_MAX_INPUT:
-		return MAX_INPUT;
-	case _PC_NAME_MAX:
-		return NAME_MAX;
-	case _PC_PATH_MAX:
-		return PATH_MAX;
-	case _PC_PIPE_BUF:
-		return PIPE_BUF;
-	case _PC_CHOWN_RESTRICTED:
-		return _POSIX_CHOWN_RESTRICTED;
-	case _PC_NO_TRUNC:
-		return _POSIX_NO_TRUNC;
-	case _PC_VDISABLE:
-		return _POSIX_VDISABLE;
-	case _PC_SYNC_IO:
-		return 1;
-	case _PC_FILESIZEBITS:
-		return 64; 	/* 64? */
-	case _PC_SYMLINK_MAX:
-		return -1;	/* Glibc says there's not any system with this limit */
-	case _PC_2_SYMLINKS:
-		return 1;
-	case _PC_ACL_EXTENDED:
-		return 0;	/* fd do not support acl */
-	case _PC_MIN_HOLE_SIZE:
-		return 4096;
-	case _PC_ACL_PATH_MAX:
-		return PATH_MAX; /* is it the same? */
-	case _PC_ACL_NFS4:
-		return 0;	/* fd do not support NFSv4 acl */
-	default:
-		break;
-	}
-
-	errno = EINVAL;
-	return -1;
-}
-
-/*
- * TODO: Use path/fd when is possible
-*/
-
-long
-pathconf(const char *path __unused, int name)
-{
-	return __pathconf(name);
-}
-
-long
-fpathconf(int fd __unused, int name)
-{
-	return __pathconf(name);
-}
-
-long
-lpathconf(const char *path __unused, int name)
-{
-	return __pathconf(name);
-}
+#define _PATHCONF
+#include "lpathconf.c"

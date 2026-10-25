@@ -1,3 +1,4 @@
+/*	$nlibc: madvise.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 /*	$NetBSD: posix_madvise.c,v 1.1 2008/04/22 10:42:16 rmind Exp $	*/
 
 /*
@@ -26,11 +27,32 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$nlibc: madvise.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include <sys/syscall.h>
 #include <sys/mman.h>
+#include <unistd.h>
+#include <errno.h>
 
 int
 posix_madvise(void *addr, size_t len, int advice)
 {
+	int r;
+	int serrno = errno;
 
-	return madvise(addr, len, advice);
+	if ((r = madvise(addr, len, advice)) != 0) {
+		r = errno;
+		errno = serrno;
+	}
+
+	return r;
+}
+
+int
+madvise(void *addr, size_t len, int advice)
+{
+	return syscall(SYS_madvise, addr, len, advice);
 }

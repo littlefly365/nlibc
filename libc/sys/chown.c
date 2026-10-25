@@ -45,12 +45,6 @@ __weak_alias(__posix_lchown, lchown);
 #endif
 
 int
-fchownat(int fd, const char *path, uid_t owner, gid_t group, int flag)
-{
-	return syscall(SYS_fchownat, fd, path, owner, group, flag);
-}
-
-int
 chown(const char *path, uid_t owner, gid_t group)
 {
 	return fchownat(AT_FDCWD, path, owner, group, 0);
@@ -63,7 +57,13 @@ lchown(const char *path, uid_t owner, gid_t group)
 }
 
 int
-fchown(const char *path, uid_t owner, gid_t group)
+fchown(int fd, uid_t owner, gid_t group)
 {
-	return fchownat(AT_FDCWD, "", owner, group, AT_EMPTY_PATH);
+	return fchownat(fd, "", owner, group, AT_EMPTY_PATH);
+}
+
+int
+fchownat(int fd, const char *path, uid_t owner, gid_t group, int flag)
+{
+	return syscall(SYS_fchownat, fd, path, owner, group, flag);
 }

@@ -627,9 +627,7 @@ int	connect(int, const struct sockaddr *, socklen_t);
 int	getpeername(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	getsockname(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	getsockopt(int, int, int, void *__restrict, socklen_t * __restrict);
-#if 0
 int	getsockopt2(int, int, int, void *__restrict, socklen_t * __restrict);
-#endif
 int	listen(int, int);
 int	paccept(int, struct sockaddr * __restrict, socklen_t * __restrict,
 	const sigset_t * __restrict, int);

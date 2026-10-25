@@ -1,13 +1,22 @@
 .PATH: ${ARCHDIR}/sys ${.CURDIR}/sys
 
-SRCS+=	eventfd_read.c eventfd_write.c fh.c fexecve.c futimens.c getdents.c \
-	getvfsstat.c ioctl.c issetugid.c kqueue.c login.c mmap.c posix_madvise.c \
-	pathconf.c lwp.c minherit.c sbrk.c setexid.c sigaction.c \
-	stat.c statvfs1.c statvfs.c syscall.c syscalls.c __sysctl.c utimes.c \
-	utrace.c uuidgen.c vadvise.c mkfifo.c chmod.c chown.c
+SRCS+=	accept.c access.c bind.c brk.c chdir.c chflags.c chmod.c chown.c chroot.c \
+	clock_settime.c close.c connect.c dup.c eventfd.c eventfd_read.c eventfd_write.c \
+	execve.c _exit.c fallocate.c fcntl.c fdatasync.c fhopen.c flock.c fork.c \
+	fpathconf.c fsync.c futimens.c __getcwd.c getdents.c getfh.c getgid.c getgroups.c \
+	getitimer.c __getlogin.c getpeername.c getpgrp.c getpid.c getpriority.c getrandom.c \
+	getrlimit.c getrusage.c getsid.c getsockname.c getsockopt.c gettimeofday.c \
+	getuid.c getvfsstat.c ioctl.c issetugid.c kill.c kqueue.c link.c listen.c \
+	lpathconf.c lseek.c _lwp_exit.c _lwp_getprivate.c _lwp_kill.c _lwp_park.c \
+	_lwp_self.c _lwp_unpark.c madvise.c mincore.c minherit.c mkdir.c mkfifo.c mknod.c \
+	mmap.c mprotect.c mremap.c msync.c munmap.c nanosleep.c open.c pathconf.c pipe.c \
+	poll.c read.c recvfrom.c rename.c revoke.c rmdir.c select.c semget.c semop.c sendto.c \
+	setgroups.c setpgid.c setregid.c setreuid.c setsid.c setuid.c shutdown.c sigaction.c \
+	sigaltstack.c sigprocmask.c sigsuspend.c socket.c socketpair.c stat.c statvfs1.c \
+	statvfs.c sync.c syscall.c __sysctl.c truncate.c umask.c utimensat.c utimes.c \
+	utrace.c uuidgen.c vadvise.c __vfork14.c wait4.c write.c
 
 .include "${ARCHDIR}/sys/Makefile.inc"
-.if 0
 MAN+=	accept.2 access.2 acct.2 adjtime.2 bind.2 brk.2 chdir.2 \
 	chflags.2 chmod.2 chown.2 chroot.2 clock_getcpuclockid2.2 \
 	clock_settime.2 clone.2 close.2 \
@@ -159,4 +168,3 @@ MLINKS+=pipe.2 pipe2.2
 MLINKS+=accept.2 paccept.2 accept.2 accept4.2
 MLINKS+=nanosleep.2 clock_nanosleep.2
 MLINKS+=clock_getcpuclockid2.2 clock_getcpuclockid.2
-.endif

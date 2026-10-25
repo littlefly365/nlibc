@@ -35,9 +35,17 @@ __RCSID("$nlibc: mkfifo.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 int
 mkfifo(const char *path, mode_t mode)
 {
-	return mknod(path, mode | 0010000, 0);
+	return mkfifoat(AT_FDCWD, path, mode);
+}
+
+int
+mkfifoat(int fd, const char *path, mode_t mode)
+{
+	return mknodat(fd, path, mode | 0010000, 0);
 }

@@ -109,6 +109,10 @@
 #  define MALLOC_DEBUG
 #endif
 
+#ifndef USE_BRK
+#  define USE_BRK
+#endif
+
 #include <sys/cdefs.h>
 /* __FBSDID("$FreeBSD: src/lib/libc/stdlib/malloc.c,v 1.147 2007/06/15 22:00:16 jasone Exp $"); */
 __RCSID("$NetBSD: jemalloc.c,v 1.64 2023/12/13 23:53:50 mrg Exp $");

@@ -1,4 +1,4 @@
-/*    $nlibc: sbrk.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: munmap.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,26 +31,14 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: sbrk.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: munmap.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#ifdef __weak_alias
-__weak_alias(sbrk, _sbrk);
-#endif
-
-void *
-_sbrk(intptr_t increment)
+int
+munmap(void *start, size_t len)
 {
-	void *oldbrk = (void*)syscall(SYS_brk, 0);
-
-	if (increment == 0)
-		return oldbrk;
-
-	if (syscall(SYS_brk, oldbrk + increment) < 0)
-		return (void*)-1;
-
-	return oldbrk;
+	return syscall(SYS_munmap, start, len);
 }

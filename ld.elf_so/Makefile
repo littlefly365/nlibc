@@ -49,7 +49,8 @@ CPPFLAGS+=	-DGNU_RELRO
 CPPFLAGS+=	-D_RTLD_SOURCE
 CPPFLAGS+=	-DHAVE_INITFINI_ARRAY
 COPTS+=		-fno-stack-protector
-COPTS+=		-O3
+COPTS+=		-O0 -g
+#COPTS+=		-O3
 COPTS+=		-fomit-frame-pointer
 COPTS+=		-mno-3dnow -mno-mmx -mno-sse -mno-sse2 -mno-sse3
 

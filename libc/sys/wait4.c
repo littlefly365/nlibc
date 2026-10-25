@@ -1,4 +1,4 @@
-/*    $nlibc: fh.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: wait.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,41 +31,27 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: fh.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: wait.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
-#include <sys/statvfs.h>
-#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 
-/*
- * FILE HANDLER FUNCTION STUBS
-*/
+#ifdef __weak_alias
+__weak_alias(waitpid, _waitpid);
+__weak_alias(waitid, _waitid);
+#endif
 
-int
-__getfh30(const char *path __unused, void *fhp __unused, size_t *fh_size __unused)
+pid_t
+__wait450(pid_t pid, int *status, int options, struct rusage *rusage)
 {
-	errno = ENOSYS;
-	return -1;
+	return syscall(SYS_wait4, pid, status, options, rusage);
 }
 
-int
-__fhopen40(const void *fhp __unused, size_t fh_size __unused, int flags __unused)
-{
-	errno = ENOSYS;
-	return -1;
-}
-
-int
-__fhstat50(const void *fhp __unused, size_t fh_size, struct stat *st __unused)
-{
-	errno = ENOSYS;
-	return -1;
-}
-
-int
-__fhstatvfs190(const void *fhp __unused, size_t fh_size __unused, struct statvfs *buf __unused, int flags __unused)
+pid_t
+wait6(idtype_t idtype, id_t id, int *status, int options, struct wrusage *wrusage, siginfo_t *infop)
 {
 	errno = ENOSYS;
 	return -1;

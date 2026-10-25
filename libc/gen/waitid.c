@@ -33,10 +33,12 @@ __RCSID("$NetBSD: waitid.c,v 1.4 2016/04/06 04:09:10 christos Exp $");
 
 #include "namespace.h"
 #include <sys/types.h>
+#include <sys/syscall.h>
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <sys/resource.h>
 
+#include <unistd.h>
 #include <string.h>
 #include <signal.h>
 
@@ -47,6 +49,7 @@ __weak_alias(waitid,_waitid)
 int
 waitid(idtype_t idtype, id_t id, siginfo_t *info, int flags)
 {
+#if 0
 	int status;
 
 	switch (wait6(idtype, id, &status, flags, NULL, info)) {
@@ -59,4 +62,7 @@ waitid(idtype_t idtype, id_t id, siginfo_t *info, int flags)
 	default:
 		return 0;
 	}
+#else
+	return syscall(SYS_waitid, idtype, id, info, flags);
+#endif
 }

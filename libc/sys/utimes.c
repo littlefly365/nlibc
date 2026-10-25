@@ -38,8 +38,6 @@ __RCSID("$nlibc: utimes.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #include <sys/time.h>
 #include <fcntl.h>
 
-static void timeval_to_timespec(const struct timeval tv[2], struct timespec tm[2]);
-
 int
 __utimes50(const char *path, const struct timeval tv[2])
 {
@@ -47,7 +45,11 @@ __utimes50(const char *path, const struct timeval tv[2])
 	if (!tv)
 		return utimensat(AT_FDCWD, path, 0, 0);
 
-	timeval_to_timespec(tv, tm);
+	tm[0].tv_sec = tv[0].tv_sec;
+	tm[0].tv_nsec = tv[0].tv_usec * 1000;
+	tm[1].tv_sec = tv[1].tv_sec;
+	tm[1].tv_nsec = tv[1].tv_usec * 1000;
+
 	return utimensat(AT_FDCWD, path, tm, 0);
 }
 
@@ -58,7 +60,11 @@ __futimes50(int fd, const struct timeval tv[2])
 	if (!tv)
 		return futimens(fd, 0);
 
-	timeval_to_timespec(tv, tm);
+	tm[0].tv_sec = tv[0].tv_sec;
+	tm[0].tv_nsec = tv[0].tv_usec * 1000;
+	tm[1].tv_sec = tv[1].tv_sec;
+	tm[1].tv_nsec = tv[1].tv_usec * 1000;
+
 	return futimens(fd, tm);
 }
 
@@ -69,15 +75,10 @@ __lutimes50(const char *path, const struct timeval tv[2])
 	if (!tv)
 		return utimensat(AT_FDCWD, path, 0, AT_SYMLINK_NOFOLLOW);
 
-	timeval_to_timespec(tv, tm);
-	return utimensat(AT_FDCWD, path, tm, AT_SYMLINK_NOFOLLOW);
-}
-
-static void
-timeval_to_timespec(const struct timeval tv[2], struct timespec tm[2])
-{
 	tm[0].tv_sec = tv[0].tv_sec;
 	tm[0].tv_nsec = tv[0].tv_usec * 1000;
 	tm[1].tv_sec = tv[1].tv_sec;
 	tm[1].tv_nsec = tv[1].tv_usec * 1000;
+
+	return utimensat(AT_FDCWD, path, tm, AT_SYMLINK_NOFOLLOW);
 }

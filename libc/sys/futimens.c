@@ -1,4 +1,4 @@
-/*    $nlibc: futimes.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: futimens.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: futimes.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: futimens.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/stat.h>
@@ -39,5 +39,5 @@ __RCSID("$nlibc: futimes.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 int
 futimens(int fd, const struct timespec times[2])
 {
-	return utimensat(fd, 0, times, 0);
+	return utimensat(fd, NULL, times, 0);
 }

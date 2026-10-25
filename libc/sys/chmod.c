@@ -40,12 +40,6 @@ __RCSID("$nlibc: chmod.c,v 1.0 2026/10/18 16:43:05 littlefly365 Exp $");
 #include <fcntl.h>
 
 int
-fchmodat(int fd, const char *path, mode_t mode, int flag)
-{
-	return syscall(SYS_fchmodat2, fd, path, mode, flag);
-}
-
-int
 chmod(const char *path, mode_t mode)
 {
 	return fchmodat(AT_FDCWD, path, mode, 0);
@@ -61,4 +55,10 @@ int
 fchmod(int fd, mode_t mode)
 {
 	return fchmodat(AT_FDCWD, "", mode, AT_EMPTY_PATH);
+}
+
+int
+fchmodat(int fd, const char *path, mode_t mode, int flag)
+{
+	return syscall(SYS_fchmodat2, fd, path, mode, flag);
 }

@@ -1,4 +1,4 @@
-/*    $nlibc: fexecve.c,v 1.0 2026/10/11 11:49:05 littlefly365 Exp $    */
+/*    $nlibc: clock_settime.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,15 +31,27 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: fexecve.c,v 1.0 2026/10/11 11:49:05 littlefly365 Exp $");
+__RCSID("$nlibc: clock_settime.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/syscall.h>
+#include <sys/time.h>
 #include <unistd.h>
-#include <fcntl.h> 
 
 int
-fexecve(int fd, char *const argv[], char *const envp[])
+__clock_settime50(clockid_t clk, const struct timespec *ts)
 {
-        return syscall(SYS_execveat, fd, "", argv, envp, AT_EMPTY_PATH);
+	return syscall(SYS_clock_settime, clk, ts);
+}
+
+int
+__clock_gettime50(clockid_t clk, struct timespec *ts)
+{
+	return syscall(SYS_clock_gettime, clk, ts);
+}
+
+int
+__clock_getres50(clockid_t clk, struct timespec *ts)
+{
+	return syscall(SYS_clock_getres, clk, ts);
 }

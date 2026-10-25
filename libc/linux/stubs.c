@@ -14,7 +14,6 @@ printerror(const char *fc)
 
 void recvmsg() { printerror("recvmsg"); }
 void profil() { printerror("profil"); }
-void wait6() { printerror("wait6"); }
 void timer_delete() { printerror("timer_delete"); }
 void timer_create() { printerror("timer_create"); }
 void __timer_gettime50() { printerror("__timer_gettime50"); }
@@ -28,6 +27,5 @@ void __mq_timedsend50() { printerror("__mq_timedsend50"); }
 void __mq_timedreceive50() { printerror("__mq_timedreceive50"); }
 void __lfs_segwait50() { printerror("__lfs_segwait50"); }
 void __aio_suspend50() { printerror("__aio_suspend50"); }
-void __settimeofday50() { printerror("__settimeofday50"); }
 void ____sigtimedwait50() { printerror("____sigtimedwait50"); }
 void __ntp_gettime50() { printerror("__ntp_gettime50"); }

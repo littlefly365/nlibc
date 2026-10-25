@@ -111,6 +111,7 @@ void uio_setup_sysspace(struct uio *);
 __BEGIN_DECLS
 #if defined(_NETBSD_SOURCE)
 ssize_t preadv(int, const struct iovec *, int, off_t);
+ssize_t preadv2(int, const struct iovec *, int, off_t, int); /* Linux specific */
 ssize_t pwritev(int, const struct iovec *, int, off_t);
 #endif /* _NETBSD_SOURCE */
 ssize_t	readv(int, const struct iovec *, int);

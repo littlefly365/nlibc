@@ -80,6 +80,8 @@
 #endif
 #define	O_NONBLOCK	04000		/* no delay */
 #define	O_APPEND	0x00000008	/* set append mode */
+#define O_LARGEFILE	0100000
+#define O_TMPFILE	020200000
 #if defined(_NETBSD_SOURCE)
 #define	O_SHLOCK	0x00000010	/* open with shared file lock */
 #define	O_EXLOCK	0x00000020	/* open with exclusive file lock */
@@ -332,6 +334,7 @@ struct flock {
 #define	AT_SYMLINK_NOFOLLOW	0x100	/* Do not follow symlinks */
 #define	AT_SYMLINK_FOLLOW	0x400	/* Follow symlinks */
 #define	AT_REMOVEDIR		0x800	/* Remove directory only */
+#define AT_EMPTY_PATH		0x1000	/* Do not used fd */
 #endif
 
 
@@ -364,10 +367,12 @@ int	openat(int, const char *, int, ...);
 #endif
 
 /*
- * Linux Macros missing in NetBSD
+ * Linux functions missing in NetBSD
 */
 
-#define AT_EMPTY_PATH	0x1000
+#if defined(_NETBSD_SOURCE) || defined(_GNU_SOURCE)
+int	fallocate(int, int, off_t, off_t);
+#endif
 
 __END_DECLS
 #endif /* !_KERNEL */

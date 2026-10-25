@@ -44,8 +44,10 @@ __weak_alias(syscall, _syscall);
 __weak_alias(__syscall, syscall);
 #endif
 
+extern long __raw_syscall6(long n, long a1, long a2, long a3, long a4, long a5, long a6);
+
 long
-syscall(long n, ...)
+syscall(int n, ...)
 {
 	long r;
 	va_list ap;
@@ -64,17 +66,7 @@ syscall(long n, ...)
 		return -1;
 	}
 
-#if defined(__x86_64__) || defined(__amd64__)
-	register long r10 __asm__("r10") = a4;
-	register long r8 __asm__("r8") = a5;
-	register long r9 __asm__("r9") = a6;
-
-	__asm__ __volatile__ (	"syscall" : "=a" (r) : "a"(n), "D"(a1),
-				"S"(a2), "d"(a3), "r"(r10), "r"(r8), 
-				"r"(r9) : "rcx", "r11", "memory");
-#else
-#error "nlibc is only for x86_64"
-#endif
+	r = __raw_syscall6(n, a1, a2, a3, a4, a5, a6);
 
 	if (r <= -1 && r >= -4095) {
 		errno = -r;

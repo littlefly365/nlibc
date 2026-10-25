@@ -1,4 +1,4 @@
-/*    $nlibc: lwp.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: _lwp_getprivate.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,60 +31,26 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: lwp.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: _lwp_getprivate.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <lwp.h>
 
-#define ARCH_SET_FS		0x1002
-#define ARCH_GET_FS		0x1003
-
-int
-_lwp_exit(void)
-{
-	(void)syscall(SYS_exit, 0);
-	__builtin_unreachable();
-}
-
-lwpid_t
-_lwp_self(void)
-{
-	return syscall(SYS_gettid);
-}
-
-int
-_lwp_kill(lwpid_t lwp, int sig)
-{
-	return syscall(SYS_tgkill, getpid(), lwp, sig);
-}
+#define ARCH_SET_FS             0x1002
+#define ARCH_GET_FS             0x1003
 
 void
 _lwp_setprivate(void *ptr)
 {
-	(void)syscall(SYS_arch_prctl, ARCH_SET_FS, ptr);
+	syscall(SYS_arch_prctl, ARCH_SET_FS, ptr);
 }
 
 void
 *_lwp_getprivate(void)
 {
 	unsigned long fs;
-	if (syscall(SYS_arch_prctl, ARCH_GET_FS, &fs) == -1)
-		return NULL;
+	syscall(SYS_arch_prctl, ARCH_GET_FS, &fs);
 	return (void*)fs;
-}
-
-/* FIXME: _lwp_park & _lwp_unpark */
-int
-_lwp_park(clockid_t clockid __unused, int flags __unused, struct timespec *ts __unused,
-	lwpid_t unpark __unused, const void *hint __unused, const void *unparkhint __unused)
-{
-	return 0;
-}
-
-int
-_lwp_unpark(lwpid_t lwp __unused, const void *hint __unused)
-{
-	return 0;
 }

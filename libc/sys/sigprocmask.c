@@ -1,4 +1,4 @@
-/*    $nlibc: setexid.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
+/*    $nlibc: sigprocmask.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $    */
 
 /*
  * Copyright (c) 2026, littlefly365
@@ -31,20 +31,31 @@
 
 #include <sys/cdefs.h>
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$nlibc: setexid.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
+__RCSID("$nlibc: sigprocmask.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/syscall.h>
+#include <signal.h>
 #include <unistd.h>
+#include <errno.h>
+
+#ifdef __weak_alias
+__weak_alias(sigprocmask, __sigprocmask14);
+#endif
 
 int
-seteuid(uid_t uid)
+__sigprocmask14(int how, const sigset_t *set, sigset_t *oset)
 {
-	return syscall(SYS_setresuid, -1, uid, -1);
-}
+	if (set && how - SIG_BLOCK > 2) {
+		errno = EINVAL;
+		return -1;
+	}
 
-int
-setegid(gid_t gid)
-{
-	return syscall(SYS_setresgid, -1, gid, -1);
+	if (syscall(SYS_rt_sigprocmask, how, set, oset, 8) != 0)
+		return -1;
+
+	if (oset != NULL)
+		oset->__bits[0] &= ~0x380000000ULL;
+
+	return 0;
 }

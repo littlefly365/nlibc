@@ -35,11 +35,22 @@ __RCSID("$nlibc: uuidgen.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <stdlib.h>
+#include <errno.h>
 #include <uuid.h>
 
 int
-uuidgen(uuid_t *store, int count)
+uuidgen(struct uuid *store, int count)
 {
+	if (store == NULL) {
+		errno = EFAULT;
+		return -1;
+	}
+
+	if (count < 1 || count > 2048) {
+		errno = EINVAL;
+		return -1;
+	}
+
 	for (int i = 0; i < count; i++) {
 		arc4random_buf(&store[i], sizeof(store[i]));
 
