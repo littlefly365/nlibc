@@ -39,6 +39,16 @@ __RCSID("$nlibc: lpathconf.c,v 1.1 2026/10/12 11:49:05 littlefly365 Exp $");
 #include <unistd.h>
 #include <errno.h>
 
+/*
+ * NOTE 1: This implementation always calls statvfs/fstatvfs even 
+ * when the requested information is only available through macros,
+ * the good part of this is that we have the same behaviour 
+ * that NetBSD (errno: ENAMETOOLONG, EBADF, ENOENT, etc).
+ *
+ * NOTE 2: We don't do the same with lpathconf because it's hardest
+ * to implement it.
+*/
+
 long
 #if defined(_PATHCONF)
 pathconf(const char *path, int name)
@@ -48,8 +58,7 @@ fpathconf(int fd, int name)
 lpathconf(const char *path __unused, int name)
 #endif
 {
-	switch (name) {
-	case _PC_NAME_MAX:
+	long namemax = NAME_MAX;
 #if defined(_PATHCONF) || defined(_FPATHCONF)
 	int r;
 	struct statvfs st;
@@ -58,21 +67,25 @@ lpathconf(const char *path __unused, int name)
 #elif defined(_FPATHCONF)
 	r = fstatvfs(fd, &st);
 #endif
-	switch (errno) {
-	case EACCES:
-	case EBADFD:
-	case EIO:
-	case ELOOP:
-	case ENAMETOOLONG:
-	case ENOENT:
-	case ENOTDIR:
-		return -1;
-	}
-
 	if (r == 0)
-		return st.f_namemax;
+		namemax = st.f_namemax;
+
+	if (r != 0) {
+		switch (errno) {
+		case EACCES:
+		case EBADF:
+		case EIO:
+		case ELOOP:
+		case ENAMETOOLONG:
+		case ENOENT:
+		case ENOTDIR:
+			return -1;
+		}
+	}
 #endif
-		return NAME_MAX;
+	switch (name) {
+	case _PC_NAME_MAX:
+		return namemax;
 	case _PC_LINK_MAX:
 		return LINK_MAX;
 	case _PC_MAX_CANON:
