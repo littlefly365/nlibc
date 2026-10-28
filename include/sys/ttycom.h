@@ -107,16 +107,16 @@ struct ptmget {
 #define	TIOCSETA	0x5402			/* set termios struct */
 #define	TIOCSETAW	0x5403			/* drain output, set */
 #define	TIOCSETAF	0x5404			/* drn out, fls in, set */
-#define	TIOCGETD	_IOR('t', 26, int)	/* get line discipline (deprecated) */
-#define	TIOCSETD	_IOW('t', 27, int)	/* set line discipline (deprecated) */
+#define	TIOCGETD	0x5424			/* get line discipline (deprecated) */
+#define	TIOCSETD	0x5423			/* set line discipline (deprecated) */
 
 /*
  * This is the maximum length of a line discipline's name.
  */
 #define	TTLINEDNAMELEN	32
 typedef char linedn_t[TTLINEDNAMELEN];
-#define TIOCGLINED	0x5424			/* get line discipline (new) */
-#define TIOCSLINED	0x5423			/* set line discipline (new) */
+#define TIOCGLINED	_IOR('t', 66, linedn_t)	/* get line discipline (new) */
+#define TIOCSLINED	_IOW('t', 67, linedn_t)	/* set line discipline (new) */
 						/* 127-124 compat */
 #define	TIOCSBRK	 _IO('t', 123)		/* set break bit */
 #define	TIOCCBRK	 _IO('t', 122)		/* clear break bit */

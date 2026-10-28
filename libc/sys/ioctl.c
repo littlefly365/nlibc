@@ -37,7 +37,9 @@ __RCSID("$nlibc: ioctl.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #include <sys/syscall.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <string.h>
 #include <stdarg.h>
+#include <errno.h>
 
 int
 ioctl(int fd, unsigned long request, ...)
@@ -47,6 +49,36 @@ ioctl(int fd, unsigned long request, ...)
 	va_start(ap, request);
 	arg = va_arg(ap, void *);
 	va_end(ap);
+
+	if (fd < 0) {
+		errno = EBADF;
+		return -1;
+	}
+
+	switch (request) {
+	case TIOCGQSIZE:
+		if (fd != 0) {
+			errno = ENOTTY;
+			return -1;
+		}
+
+		*(int*)arg = 4096;
+		return 0;
+	case TIOCGLINED:
+		int ldisc;
+		if (syscall(SYS_ioctl, fd, TIOCGETD, &ldisc) < 0)
+			return -1;
+
+		if (ldisc == 0) {
+			strlcpy((char*)arg, "termios", TTLINEDNAMELEN);
+			return 0;
+		}
+
+		errno = ENOTSUP;
+		return -1;
+	default:
+		break;
+	}
 
 	return syscall(SYS_ioctl, fd, request, arg);
 }
