@@ -39,6 +39,7 @@ __RCSID("$nlibc: ioctl.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 #include <unistd.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <errno.h>
 
 int
@@ -76,6 +77,29 @@ ioctl(int fd, unsigned long request, ...)
 
 		errno = ENOTSUP;
 		return -1;
+	case TIOCPTSNAME:
+		int len;
+		char procfs[32];
+		unsigned int pty;
+		struct ptmget *ptm = (struct ptmget *)arg;
+
+		if (syscall(SYS_ioctl, fd, TIOCGPTN, &pty) != 0) {
+			if (errno != ENOTTY)
+				return -1;
+			snprintf(procfs, sizeof(procfs), "/proc/self/fd/%d", fd);
+			if ((len = readlink(procfs, ptm->sn, sizeof(ptm->sn) - 1)) < 0)
+				return -1;
+
+			ptm->sn[len] = '\0';
+			return 0;
+		}
+
+		if ((unsigned int)snprintf(ptm->sn, sizeof(ptm->sn), "/dev/pts/%u", pty) >= sizeof(ptm->sn)) {
+			errno = ERANGE;
+			return -1;
+		}
+
+		return 0;
 	default:
 		break;
 	}

@@ -179,5 +179,6 @@ typedef char linedn_t[TTLINEDNAMELEN];
 #define	STRIPDISC	6		/* metricom wireless IP discipline */
 #define	HDLCDISC	9		/* HDLC discipline */
 
+#define TIOCGPTN	0x80045430
 #endif /* !_NETBSD_SYS_TTYCOM_H_ */
 #endif /* _NETBSD_SOURCE || _IOCTL_H */

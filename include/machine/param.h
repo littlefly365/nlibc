@@ -16,11 +16,13 @@
 #endif
 #endif
 
-#define	_MACHINE	amd64
-#define	MACHINE		"amd64"
-#define	_MACHINE_ARCH	x86_64
-#define	MACHINE_ARCH	"x86_64"
-#define MID_MACHINE	MID_X86_64
+#define	_MACHINE		amd64
+#define	MACHINE			"amd64"
+#define	_MACHINE_ARCH		x86_64
+#define	MACHINE_ARCH		"x86_64"
+#define _HARDWARE_PLATFORM	i86pc
+#define HARDWARE_PLATFORM	"i86pc"
+#define MID_MACHINE		MID_X86_64
 
 #define ALIGNED_POINTER(p,t)		1
 #define ALIGNED_POINTER_LOAD(q,p,t)	memcpy((q), (p), sizeof(t))

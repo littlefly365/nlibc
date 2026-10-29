@@ -67,7 +67,6 @@ static struct {
 #define _PATH_HOSTID	"/etc/hostid"
 
 static int get_int_from_file(const char *path);
-static int get_from_file(const char *path, char *buf, size_t len);
 static int copy(const char *src, char *dst, size_t srclen, size_t *dstlen);
 
 int
@@ -142,7 +141,7 @@ __sysctl(const int *name, u_int miblen, void *oldp, size_t *oldlenp, const void 
 			case KERN_HOSTID:
 				int fd;
 				if ((fd = open(_PATH_HOSTID, O_RDONLY)) != 0)
-					return -1;
+					return 0; /* fall back */
 				if (read(fd, oldp, *oldlenp) < 0)
 					return -1;
 				close(fd);
@@ -261,7 +260,7 @@ __sysctl(const int *name, u_int miblen, void *oldp, size_t *oldlenp, const void 
 		case HW_MACHINE:
 			return copy(MACHINE, oldp, strlen(MACHINE), oldlenp);
 		case HW_MODEL:
-			return get_from_file("/sys/devices/virtual/dmi/id/product_name", oldp, *oldlenp);
+			return copy(HARDWARE_PLATFORM, oldp, strlen(HARDWARE_PLATFORM), oldlenp);
 		case HW_NCPU:
 			if ((*(int*)oldp = get_int_from_file("/sys/devices/system/cpu/possible")) <= 0)
 				return -1;
@@ -371,22 +370,4 @@ get_int_from_file(const char *path)
 		return -1;
 
 	return n;
-}
-
-static int
-get_from_file(const char *path, char *buf, size_t len)
-{
-	int fd, nl;
-	char *str;
-	if ((fd = open(path, O_RDONLY)) < 0)
-		return -1;
-	if ((nl = read(fd, buf, len)) <= 0)
-		return -1;
-
-	close(fd);
-	buf[nl] = '\0';
-
-	if ((str = strrchr(buf, '\n')) != NULL)
-		*str = '\0';
-	return 0;
 }
