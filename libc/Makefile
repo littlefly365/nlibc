@@ -24,6 +24,8 @@ MACHINE_CPU ?= ${MACHINE_ARCH}
 ARCHSUBDIR = ${MACHINE_ARCH}
 ARCHDIR = ${.CURDIR}/arch/${ARCHSUBDIR}
 
+NETBSDSRCDIR=${.CURDIR}
+LIBCDIR=${NETBSDSRCDIR}
 CPPFLAGS+=-ffreestanding -nostdinc -nostdlib
 CPPFLAGS+=-I${.CURDIR}/include -I${.CURDIR}/../include -I${.CURDIR}/locale -I${.CURDIR}/citrus \
 	-I${.CURDIR}/gen -I${.CURDIR}/stdlib -I${.CURDIR}/../csu/common -I${.CURDIR} \

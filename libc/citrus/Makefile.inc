@@ -16,13 +16,8 @@ SRCS+=	citrus_lc_ctype.c \
 	citrus_lc_numeric.c \
 	citrus_lc_time.c \
 	citrus_lc_messages.c
-CPPFLAGS.citrus_bcs_strtol.c+=	-I${LIBCDIR}/../../common/lib/libc/stdlib
-CPPFLAGS.citrus_bcs_strtoul.c+=	-I${LIBCDIR}/../../common/lib/libc/stdlib
-CPPFLAGS.citrus_lc_ctype.c+=	-I${LIBCDIR}/locale
-CPPFLAGS.citrus_lc_monetary.c+=	-I${LIBCDIR}/locale
-CPPFLAGS.citrus_lc_numeric.c+=	-I${LIBCDIR}/locale
-CPPFLAGS.citrus_lc_time.c+=	-I${LIBCDIR}/locale
-CPPFLAGS.citrus_lc_messages.c+=	-I${LIBCDIR}/locale
+CPPFLAGS+=	-I${LIBCDIR}/common/lib/libc/stdlib
+CPPFLAGS+=	-I${LIBCDIR}/locale
 
 COPTS.citrus_iconv.c+=		${CC_WNO_FORMAT_TRUNCATION}
 COPTS.citrus_csmapper.c+=	${CC_WNO_FORMAT_TRUNCATION}
