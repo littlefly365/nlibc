@@ -35,6 +35,8 @@ __RCSID("$NetBSD: statvfs.c,v 1.7 2019/09/22 22:59:38 christos Exp $");
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/statvfs.h>
+#include <sys/statfs.h>
+#include <unistd.h>
 
 int
 statvfs(const char *file, struct statvfs *st)
@@ -52,4 +54,16 @@ int
 fhstatvfs(const void *fh, size_t fh_size, struct statvfs *st)
 {
 	return fhstatvfs1(fh, fh_size, st, ST_WAIT);
+}
+
+int
+linux_statfs(const char *path, struct statfs *buf)
+{
+	return syscall(SYS_statfs, fd, buf);
+}
+
+int
+linux_fstatfs(int fd, struct statfs *buf)
+{
+	return syscall(SYS_fstatfs, fd, buf);
 }
