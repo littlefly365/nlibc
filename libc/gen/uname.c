@@ -107,6 +107,12 @@ uname(struct utsname *name)
 	len = sizeof(name->machine);
 	if (sysctl(mib, 2, &name->machine, &len, NULL, 0) == -1)
 		goto error;
+
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_DOMAINNAME;
+	len = sizeof(name->domainname);
+	if (sysctl(mib, 2, &name->domainname, &len, NULL, 0) == -1)
+		goto error;
 	return (0);
 
 error:

@@ -55,14 +55,7 @@ __RCSID("$nlibc: __sysctl.c,v 1.0 2026/10/11 11:47:10 littlefly365 Exp $");
 
 #include <machine/vmparam.h>
 
-static struct {
-	char sysname[SYS_NMLN];	/* unused */
-	char nodename[SYS_NMLN];
-	char release[SYS_NMLN];
-	char version[SYS_NMLN];
-	char machine[SYS_NMLN];	/* unused */
-	char domainname[SYS_NMLN];
-} uts;
+static struct utsname uts;
 
 #define _PATH_HOSTID	"/etc/hostid"
 
@@ -72,6 +65,8 @@ static int copy(const char *src, char *dst, size_t srclen, size_t *dstlen);
 int
 __sysctl(const int *name, u_int miblen, void *oldp, size_t *oldlenp, const void *newp, size_t newlenp)
 {
+	static int uts_init;
+
 	if (miblen == 0 || miblen > CTL_MAXNAME) {
 		errno = EINVAL;
 		return -1;
@@ -102,9 +97,10 @@ __sysctl(const int *name, u_int miblen, void *oldp, size_t *oldlenp, const void 
 
 			if (name[1] == KERN_OSRELEASE || name[1] == KERN_VERSION || \
 				name[1] == KERN_HOSTNAME || name[1] == KERN_DOMAINNAME) {
-				if (uts.release[0] == '\0') {
+				if (uts_init == 0) {
 					if (syscall(SYS_uname, &uts) != 0)
 						return -1;
+					uts_init = 1;
 				}
 			}
 
@@ -140,11 +136,16 @@ __sysctl(const int *name, u_int miblen, void *oldp, size_t *oldlenp, const void 
 				return copy(uts.nodename, oldp, strlen(uts.nodename), oldlenp);
 			case KERN_HOSTID:
 				int fd;
-				if ((fd = open(_PATH_HOSTID, O_RDONLY)) != 0)
-					return 0; /* fall back */
-				if (read(fd, oldp, *oldlenp) < 0)
-					return -1;
-				close(fd);
+				if ((fd = open(_PATH_HOSTID, O_RDONLY)) == 0) {
+					if (read(fd, oldp, *oldlenp) > 0) {
+						close(fd);
+						return 0;
+					}
+
+					close(fd);
+				}
+
+				*oldp = 0; /* fallback */
 				break;
 			case KERN_CLOCKRATE:
 			case KERN_VNODE:
